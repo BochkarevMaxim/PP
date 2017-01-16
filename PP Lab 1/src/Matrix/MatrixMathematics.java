@@ -64,8 +64,6 @@ public class MatrixMathematics {
 	}
 	
 	public static Matrix getCofactorMatrix(Matrix matrix) throws NoSquareException, InterruptedException {
-		long startTime = System.currentTimeMillis();
-
 		Matrix mat = new Matrix(matrix.getNrows(), matrix.getNcols());
 		for (int i=0;i<matrix.getNrows();i++) {
 			for (int j=0; j<matrix.getNcols();j++) {
@@ -73,9 +71,6 @@ public class MatrixMathematics {
 						getDeterminant(createSubMatrix(matrix, i, j)));
 			}
 		}
-		long endTime   = System.currentTimeMillis();
-		long iterativeTotalTime = endTime - startTime;
-		System.out.println("COFACTOR time " + iterativeTotalTime);
 		return mat;
 	}
 }
