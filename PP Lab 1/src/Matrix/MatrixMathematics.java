@@ -4,6 +4,10 @@ public class MatrixMathematics {
 
 	public MatrixMathematics(){}
 
+	public static Matrix getInversedMatrix(Matrix matrix) throws NoSquareException, InterruptedException {
+		return (getTransposedMatrix(getCofactorMatrix(matrix)).multiplyByConstant(1.0/ getDeterminant(matrix)));
+	}
+
 	public static Matrix getTransposedMatrix(Matrix matrix) {
 		Matrix transposedMatrix = new Matrix(matrix.getNcols(), matrix.getNrows());
 		for (int i=0;i<matrix.getNrows();i++) {
@@ -17,10 +21,6 @@ public class MatrixMathematics {
 	// getInversedMatrix matrix calculation formula taken from:
 	// http://mathprofi.ru/kak_naiti_obratnuyu_matricu.html
 
-	public static Matrix getInversedMatrix(Matrix matrix) throws NoSquareException {
-		return (getTransposedMatrix(getCofactorMatrix(matrix)).multiplyByConstant(1.0/ getDeterminant(matrix)));
-	}
-	
 	public static double getDeterminant(Matrix matrix) throws NoSquareException {
 		if (!matrix.isSquare())
 			throw new NoSquareException("matrix need to be square.");
@@ -40,7 +40,7 @@ public class MatrixMathematics {
 		return sum;
 	}
 
-	private static int changeSign(int i) {
+	public static int changeSign(int i) {
 		if (i%2==0)
 			return 1;
 		return -1;
@@ -63,7 +63,9 @@ public class MatrixMathematics {
 		return mat;
 	}
 	
-	public static Matrix getCofactorMatrix(Matrix matrix) throws NoSquareException {
+	public static Matrix getCofactorMatrix(Matrix matrix) throws NoSquareException, InterruptedException {
+		long startTime = System.currentTimeMillis();
+
 		Matrix mat = new Matrix(matrix.getNrows(), matrix.getNcols());
 		for (int i=0;i<matrix.getNrows();i++) {
 			for (int j=0; j<matrix.getNcols();j++) {
@@ -71,6 +73,9 @@ public class MatrixMathematics {
 						getDeterminant(createSubMatrix(matrix, i, j)));
 			}
 		}
+		long endTime   = System.currentTimeMillis();
+		long iterativeTotalTime = endTime - startTime;
+		System.out.println("COFACTOR time " + iterativeTotalTime);
 		return mat;
 	}
 }
