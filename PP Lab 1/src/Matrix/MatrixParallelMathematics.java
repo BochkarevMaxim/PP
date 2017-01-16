@@ -24,6 +24,9 @@ public class MatrixParallelMathematics extends MatrixMathematics {
         return (getTransposedMatrix(getCofactorMatrix(matrix)).multiplyByConstant(1.0 / getDeterminant(matrix)));
     }
 
+    // parallel calculation realisation taken from
+    // https://docs.oracle.com/javase/tutorial/essential/concurrency/exinter.html
+    // and http://stackoverflow.com/a/10092317
 
     public static Matrix getCofactorMatrix(Matrix matrix) throws NoSquareException, InterruptedException {
 
