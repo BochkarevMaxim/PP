@@ -2,9 +2,9 @@ package Matrix;
 
 public class MatrixMathematics {
 
-	private MatrixMathematics(){}
+	public MatrixMathematics(){}
 
-	public static Matrix transpose(Matrix matrix) {
+	public static Matrix getTransposedMatrix(Matrix matrix) {
 		Matrix transposedMatrix = new Matrix(matrix.getNcols(), matrix.getNrows());
 		for (int i=0;i<matrix.getNrows();i++) {
 			for (int j=0;j<matrix.getNcols();j++) {
@@ -13,12 +13,15 @@ public class MatrixMathematics {
 		}
 		return transposedMatrix;
 	}
-	
-	public static Matrix inverse(Matrix matrix) throws NoSquareException {
-		return (transpose(cofactor(matrix)).multiplyByConstant(1.0/determinant(matrix)));
+
+	// getInversedMatrix matrix calculation formula taken from:
+	// http://mathprofi.ru/kak_naiti_obratnuyu_matricu.html
+
+	public static Matrix getInversedMatrix(Matrix matrix) throws NoSquareException {
+		return (getTransposedMatrix(getCofactorMatrix(matrix)).multiplyByConstant(1.0/ getDeterminant(matrix)));
 	}
 	
-	public static double determinant(Matrix matrix) throws NoSquareException {
+	public static double getDeterminant(Matrix matrix) throws NoSquareException {
 		if (!matrix.isSquare())
 			throw new NoSquareException("matrix need to be square.");
 		if (matrix.size() == 1){
@@ -26,11 +29,13 @@ public class MatrixMathematics {
 		}
 			
 		if (matrix.size()==2) {
-			return (matrix.getValueAt(0, 0) * matrix.getValueAt(1, 1)) - ( matrix.getValueAt(0, 1) * matrix.getValueAt(1, 0));
+			return (matrix.getValueAt(0, 0) * matrix.getValueAt(1, 1)) -
+					( matrix.getValueAt(0, 1) * matrix.getValueAt(1, 0));
 		}
 		double sum = 0.0;
 		for (int i=0; i<matrix.getNcols(); i++) {
-			sum += changeSign(i) * matrix.getValueAt(0, i) * determinant(createSubMatrix(matrix, 0, i));
+			sum += changeSign(i) * matrix.getValueAt(0, i) *
+					getDeterminant(createSubMatrix(matrix, 0, i));
 		}
 		return sum;
 	}
@@ -58,14 +63,14 @@ public class MatrixMathematics {
 		return mat;
 	}
 	
-	public static Matrix cofactor(Matrix matrix) throws NoSquareException {
+	public static Matrix getCofactorMatrix(Matrix matrix) throws NoSquareException {
 		Matrix mat = new Matrix(matrix.getNrows(), matrix.getNcols());
 		for (int i=0;i<matrix.getNrows();i++) {
 			for (int j=0; j<matrix.getNcols();j++) {
-				mat.setValueAt(i, j, changeSign(i) * changeSign(j) * determinant(createSubMatrix(matrix, i, j)));
+				mat.setValueAt(i, j, changeSign(i) * changeSign(j) *
+						getDeterminant(createSubMatrix(matrix, i, j)));
 			}
 		}
-		
 		return mat;
 	}
 }
